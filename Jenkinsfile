@@ -29,15 +29,15 @@ pipeline {
                 sh 'nginx -v'
             }
         }
-    }
-    post {
-        always {
-            echo 'One way or another, I have finished'
-            sh 'docker ps -q -f status=exited | xargs --no-run-if-empty docker rm'
-            sh 'docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi'
-            //sh 'docker image ls -q | xargs --no-run-if-empty docker image rm'
-            sh 'docker volume ls -qf dangling=true | xargs -r docker volume rm'
-            deleteDir()
+        post {
+            always {
+                echo 'One way or another, I have finished'
+                sh 'docker ps -q -f status=exited | xargs --no-run-if-empty docker rm'
+                sh 'docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi'
+                //sh 'docker image ls -q | xargs --no-run-if-empty docker image rm'
+                sh 'docker volume ls -qf dangling=true | xargs -r docker volume rm'
+                deleteDir()
+            }
         }
     }
 }
