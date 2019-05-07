@@ -1,11 +1,13 @@
 pipeline {
     stages{
-        agent{
-            node {
-                label: 'slave1'
+        stage ('Test echo'){
+            agent{
+                node {
+                    label: 'slave1'
+                }
             }
-            stage('Test'){
-                echo 'Hello from slave!'
+            steps{
+                echo 'Hello from test!'
             }
         }
     }
