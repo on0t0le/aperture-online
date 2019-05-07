@@ -1,6 +1,7 @@
 pipeline {
     agent none
     stages {
+        when { triggeredBy 'SCMTrigger' }
         stage ('Test echo') {
             agent {
                 node {
