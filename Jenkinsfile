@@ -14,12 +14,19 @@ pipeline {
         stage ('List files') {
             steps {
                 script {
-                    def files = sh(script:'ls -l', returnStdout:true)
+                    def files = sh(script:'ls -la', returnStdout:true)
                     echo "Here is files:"
                     echo "${files}"
                 }
             }
         }
+
+        stage ('Build container') {
+            steps {
+                script {
+                    sh 'docker build -t test .'
+                }
+            }
+        }
     }
 }
-//some comments
