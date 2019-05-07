@@ -20,8 +20,10 @@ pipeline {
         }
         stage('Build image'){
             agent {
-                //dockerfile true
-                label 'slave1'
+                docker {
+                    dockerfile true
+                    label 'slave1'
+                }
             }
             steps{
                 sh 'nginx -v'
