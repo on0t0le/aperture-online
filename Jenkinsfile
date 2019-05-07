@@ -1,8 +1,17 @@
 pipeline {
     agent none
     stages {
+        stage ('git'){
+            agent {
+                node {
+                    label 'master'
+                }
+            }
+            steps {
+                git branch: 'master', url: 'https://github.com/on0t0le/aperture-online.git'
+            }
+
         stage ('Test echo') {
-        when { triggeredBy 'SCMTrigger' }
             agent {
                 node {
                     label 'slave1'
@@ -18,4 +27,3 @@ pipeline {
         }
     }
 }
-//comments
