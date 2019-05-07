@@ -5,8 +5,17 @@ pipeline {
             agent {
                 label 'slave1'
             }
-            steps{
-                echo "Hello!"
+            stages{
+                stage('Test inside 1'){
+                    steps{
+                        echo 'Greatings'
+                    }
+                }
+                stage('Test inside 2'){
+                    steps{
+                        echo 'from inside'
+                    }
+                }
             }
         }
     }
