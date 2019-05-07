@@ -10,6 +10,7 @@ pipeline {
             steps {
                 git branch: 'master', url: 'https://github.com/on0t0le/aperture-online.git'
             }
+        }
 
         stage ('Test echo') {
             agent {
