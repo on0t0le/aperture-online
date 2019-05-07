@@ -21,14 +21,22 @@ pipeline {
             }
         }
 
-        stage ('Build container') {
-            steps {
-                script {
-                    sh 'docker build --no-cache -t test .'
-                }
-            }
+        // stage ('Build container') {
+        //     steps {
+        //         script {
+        //             sh 'docker build --no-cache -t test .'
+        //         }
+        //     }
+        // }
+    }
+
+    agent {
+        docker {
+            dockerfile true
+            label 'docker-special'
         }
     }
+
     post {
         always {
             echo 'One way or another, I have finished'
