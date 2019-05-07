@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('git'){
             agent {
-                label 'slave1'
+                label "slave1"
             }
             steps {
                 git branch: 'master', url: 'https://github.com/on0t0le/aperture-online.git'
@@ -11,7 +11,7 @@ pipeline {
         }
         stage ('List files') {
             agent {
-                label 'slave1'
+                label "slave1"
             }
             steps {
                 script {
