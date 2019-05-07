@@ -1,3 +1,16 @@
+pipeline {
+    agent none
+    stages {
+        stage('Test'){
+            agent {
+                label "slave1"
+            }
+            steps{
+                echo "Hello!"
+            }
+        }
+    }
+}
 // pipeline {
 //     agent {
 //         node {
