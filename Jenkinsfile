@@ -1,8 +1,8 @@
 pipeline {
     agent none
     stages {
-        when { triggeredBy 'SCMTrigger' }
         stage ('Test echo') {
+        when { triggeredBy 'SCMTrigger' }
             agent {
                 node {
                     label 'slave1'
