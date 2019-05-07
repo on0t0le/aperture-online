@@ -30,8 +30,12 @@ pipeline {
         }
     }
     post {
-        cleanup {
-            cleanWs()
+        always {
+            echo 'One way or another, I have finished'
+            sh 'docker ps -q -f status=exited | xargs --no-run-if-empty docker rm'
+            sh 'docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi'
+            sh 'docker volume ls -qf dangling=true | xargs -r docker volume rm'
+            deleteDir()
         }
     }
 }
