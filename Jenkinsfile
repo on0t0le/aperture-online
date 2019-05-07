@@ -6,16 +6,25 @@ pipeline {
                 label 'slave1'
             }
             stages{
-                stage('Test inside 1'){
+                stage('Git'){
                     steps{
-                        echo 'Greatings'
+                        git branch: 'master', url: 'https://github.com/on0t0le/aperture-online.git'
                     }
                 }
-                stage('Test inside 2'){
+                stage('When all pulled'){
                     steps{
-                        echo 'from inside'
+                        echo 'Pulled'
                     }
                 }
+            }
+        }
+        stage('Build image'){
+            agent {
+                dockerfile true
+                label 'slave1'
+            }
+            steps{
+                sh 'nginx -v'
             }
         }
     }
