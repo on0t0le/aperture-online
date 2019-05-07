@@ -31,10 +31,8 @@ pipeline {
     }
 
     agent {
-        docker {
-            dockerfile true
-            label 'docker-special'
-        }
+        dockerfile true
+        label 'docker-special'
     }
 
     post {
