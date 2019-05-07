@@ -8,7 +8,11 @@ pipeline {
                 }
             }
             steps {
-                echo 'Hello from test!'
+                script {
+                    def containers = sh(script:'docker ps', returnStdout:true)
+                    echo "Here is containers you have:"
+                    echo "${containers}"
+                }
             }
         }
     }
