@@ -3,7 +3,9 @@ pipeline {
     stages {
         stage('Test'){
             agent {
-                label "slave1"
+                node {
+                    label 'slave1'
+                }
             }
             steps{
                 echo "Hello!"
