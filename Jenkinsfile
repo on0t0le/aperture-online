@@ -20,8 +20,7 @@ pipeline {
         }
         stage('Build image'){
             agent {
-                docker {
-                    dockerfile true
+                dockerfile {
                     label 'slave1'
                 }
             }
