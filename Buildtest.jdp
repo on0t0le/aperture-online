@@ -5,7 +5,7 @@ pipeline {
             agent {
                 dockerfile {
                     label 'slave1'
-                    additionalBuildArgs "-t test"
+                    additionalBuildArgs "--no-cache -t test"
                 }
             }
             steps{
