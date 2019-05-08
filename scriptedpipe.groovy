@@ -46,4 +46,8 @@ node('master'){
     stage('Test webapp'){
         sh (script:'curl http://localhost:8080', returnStdout:true)
     }
+
+    stage('Cleanup'){
+        deleteDir()
+    }
 }
