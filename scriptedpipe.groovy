@@ -17,13 +17,15 @@ node('slave1'){
     }
 
     stage('Docker build'){
-        sh 'docker build -t myregistry.com/admin/webapp .'
+        sh 'docker build -t myregistry.com:5000/admin/webapp .'
     }
 
     stage('Deploy to registry'){
-        withDockerRegistry(credentialsId: '61581225-5c57-46e5-9e9b-ddd07ac0806b', url: 'myregistry.com:5000') {
-            sh 'docker push myregistry.com/admin/webapp'
+        def registryServer = 'myregistry.com:5000'
+        withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'password', usernameVariable: 'username')]) {
+            sh "docker login -u${username} -p${password} ${registryServer}"
         }
+        sh 'docker push myregistry.com:5000/admin/webapp'
     }
 
     stage('Cleanup'){
