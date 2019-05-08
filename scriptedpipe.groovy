@@ -42,7 +42,7 @@ node('slave1'){
 }
 
 node('master'){
-    try{
+    try {
         timeout(time: 1, unit: 'MINUTES')
         stage('Deploy to prod'){
             def registryServer = 'myregistry.com:5000'
@@ -60,8 +60,8 @@ node('master'){
         stage('Cleanup'){
             deleteDir()
         }
-    } catch (exc) {
+    } catch (err) {
         echo 'Something failed, I should sound the klaxons!'
-        throw
+        throw err
     }
 }
