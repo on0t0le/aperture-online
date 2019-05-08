@@ -39,6 +39,10 @@ node('slave1'){
 
 node('master'){
     stage('Deploy to prod'){
+        def registryServer = 'myregistry.com:5000'
+        withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'password', usernameVariable: 'username')]) {
+            sh "docker login -u${username} -p${password} ${registryServer}"
+        }
         sh 'docker ps -q | xargs --no-run-if-empty docker rm -f'
         sh 'docker run -p 8080:80 myregistry.com:5000/admin/webapp'
     }
