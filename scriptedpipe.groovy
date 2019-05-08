@@ -17,7 +17,7 @@ node('slave1'){
     }
 
     stage('Docker build'){
-        sh 'docker build -t myregistry.com:5000/admin/webapp .'
+        sh "docker build -t myregistry.com:5000/admin/webapp:${BUILD_NUMBER} ."
     }
 
     stage('Deploy to registry'){
@@ -25,7 +25,7 @@ node('slave1'){
         withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'password', usernameVariable: 'username')]) {
             sh "docker login -u${username} -p${password} ${registryServer}"
         }
-        sh 'docker push myregistry.com:5000/admin/webapp'
+        sh "docker push myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
     }
 
     stage('Cleanup'){
@@ -44,7 +44,7 @@ node('master'){
             sh "docker login -u${username} -p${password} ${registryServer}"
         }
         sh 'docker ps -q | xargs --no-run-if-empty docker rm -f'
-        sh 'docker run -p 8080:80 myregistry.com:5000/admin/webapp'
+        sh "docker run -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
     }
 
     stage('Test webapp'){
