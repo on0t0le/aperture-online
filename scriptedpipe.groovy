@@ -10,6 +10,7 @@ node('slave1'){
     //     echo "You have this containers"
     //     echo "${containerList}"
     // }
+
     stage('Pull website from git'){
        checkout(changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'apertureweb']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/on0t0le/aperturesciense-website.git']]])
     }
@@ -41,20 +42,26 @@ node('slave1'){
 }
 
 node('master'){
-    stage('Deploy to prod'){
-        def registryServer = 'myregistry.com:5000'
-        withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'password', usernameVariable: 'username')]) {
-            sh "docker login -u${username} -p${password} ${registryServer}"
+    try{
+        timeout(time: 1, unit: 'MINUTES')
+        stage('Deploy to prod'){
+            def registryServer = 'myregistry.com:5000'
+            withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'password', usernameVariable: 'username')]) {
+                sh "docker login -u${username} -p${password} ${registryServer}"
+            }
+            sh 'docker ps -q | xargs --no-run-if-empty docker rm -f'
+            sh "docker run -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
         }
-        sh 'docker ps -q | xargs --no-run-if-empty docker rm -f'
-        sh "docker run -d -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
-    }
 
-    stage('Test webapp'){
-        sh (script:'curl http://localhost:8080')
-    }
+        stage('Test webapp'){
+            sh (script:'curl http://localhost:8080')
+        }
 
-    stage('Cleanup'){
-        deleteDir()
+        stage('Cleanup'){
+            deleteDir()
+        }
+    } catch (exc) {
+        echo 'Something failed, I should sound the klaxons!'
+        throw
     }
 }
