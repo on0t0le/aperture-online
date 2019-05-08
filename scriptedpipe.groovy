@@ -36,3 +36,14 @@ node('slave1'){
         deleteDir()
     }
 }
+
+node('master'){
+    stage('Deploy to prod'){
+        sh 'docker ps -q | xargs --no-run-if-empty docker rm -f'
+        sh 'docker run -p 8080:80 myregistry.com:5000/admin/webapp'
+    }
+
+    stage('Test webapp'){
+        sh (script:'curl http://localhost:8080', returnStdout:true)
+    }
+}
