@@ -55,7 +55,7 @@ timeout(time: 1, unit: 'MINUTES'){
             }
 
             stage('Run web-app'){
-                sh "docker run -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
+                sh "docker r -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
             }
 
             stage('Test webapp'){
