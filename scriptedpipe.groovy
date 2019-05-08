@@ -41,27 +41,29 @@ node('slave1'){
     }
 }
 
-node('master'){
-    try {
-        timeout(time: 1, unit: 'MINUTES')
-        stage('Deploy to prod'){
-            def registryServer = 'myregistry.com:5000'
-            withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'password', usernameVariable: 'username')]) {
-                sh "docker login -u${username} -p${password} ${registryServer}"
+timeout(time: 1, unit: 'MINUTES'){
+    node('master'){
+        try {
+
+            stage('Deploy to prod'){
+                def registryServer = 'myregistry.com:5000'
+                withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'password', usernameVariable: 'username')]) {
+                    sh "docker login -u${username} -p${password} ${registryServer}"
+                }
+                sh 'docker ps -q | xargs --no-run-if-empty docker rm -f'
+                sh "docker run -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
             }
-            sh 'docker ps -q | xargs --no-run-if-empty docker rm -f'
-            sh "docker run -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
-        }
 
-        stage('Test webapp'){
-            sh (script:'curl http://localhost:8080')
-        }
+            stage('Test webapp'){
+                sh (script:'curl http://localhost:8080')
+            }
 
-        stage('Cleanup'){
-            deleteDir()
+            stage('Cleanup'){
+                deleteDir()
+            }
+        } catch (err) {
+            echo 'Something failed, I should sound the klaxons!'
+            throw err
         }
-    } catch (err) {
-        echo 'Something failed, I should sound the klaxons!'
-        throw err
     }
 }
