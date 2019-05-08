@@ -5,10 +5,13 @@ node('slave1'){
         checkout scm
     }
 
-    stage('List Docker'){
-        def containerList = sh(script: 'docker ps', returnStdout: true)
-        echo "You have this containers"
-        echo "${containerList}"
+    // stage('List Docker'){
+    //     def containerList = sh(script: 'docker ps', returnStdout: true)
+    //     echo "You have this containers"
+    //     echo "${containerList}"
+    // }
+    stage('Pull website from git'){
+       checkout(changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'apertureweb']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/on0t0le/aperturesciense-website.git']]])
     }
 
     stage('List workspace'){
@@ -17,7 +20,7 @@ node('slave1'){
     }
 
     stage('Docker build'){
-        sh "docker build -t myregistry.com:5000/admin/webapp:${BUILD_NUMBER} ."
+        sh "docker build -t myregistry.com:5000/admin/webapp:${BUILD_NUMBER} apertureweb/."
     }
 
     stage('Deploy to registry'){
@@ -44,7 +47,6 @@ node('master'){
             sh "docker login -u${username} -p${password} ${registryServer}"
         }
         sh 'docker ps -q | xargs --no-run-if-empty docker rm -f'
-        //sh "docker pull myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
         sh "docker run -d -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
     }
 
