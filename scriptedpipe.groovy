@@ -55,7 +55,7 @@ timeout(time: 1, unit: 'MINUTES'){
             }
 
             stage('Run web-app'){
-                docker.image("myregistry.com:5000/admin/webapp:${BUILD_NUMBER}")
+                docker.image("myregistry.com:5000/admin/webapp:${BUILD_NUMBER}").inside('-p 8080:80')
             }
 
             stage('Test webapp'){
