@@ -49,7 +49,7 @@ node('master'){
     }
 
     stage('Test webapp'){
-        sh (script:'curl http://localhost:8080', returnStdout:true)
+        sh (script:'curl http://localhost:8080')
     }
 
     stage('Cleanup'){
