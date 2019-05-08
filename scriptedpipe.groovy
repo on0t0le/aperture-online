@@ -55,7 +55,9 @@ timeout(time: 1, unit: 'MINUTES'){
             }
 
             stage('Run web-app'){
-                sh "docker r -p 8080:80 myregistry.com:5000/admin/webapp:${BUILD_NUMBER}"
+                docker.image("myregistry.com:5000/admin/webapp:${BUILD_NUMBER}").withRun('-p 8080:80').inside{
+                    sh 'nginx -v'
+                }
             }
 
             stage('Test webapp'){
